@@ -116,4 +116,25 @@ public class Serverbootstrap {
 //        5.	关闭socket资源
         s.close();
     }
+    public static void server4() throws IOException {
+        ServerSocket serverSocket = new ServerSocket();
+        serverSocket.bind(new InetSocketAddress(9999));
+        Socket accept = serverSocket.accept();
+        InputStream inputStream = accept.getInputStream();
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        String line=null;
+        StringBuilder stringBuilder = new StringBuilder();
+        while ((line=bufferedReader.readLine())!=null){
+            stringBuilder.append(line);
+        }
+        //收到的信息
+        System.out.println(stringBuilder.toString());
+        //传输的信息
+        OutputStream outputStream = accept.getOutputStream();
+        PrintWriter printWriter = new PrintWriter(outputStream);
+        printWriter.println(new Date().toString());
+        printWriter.flush();
+        accept.close();
+    }
 }
