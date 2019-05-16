@@ -1,21 +1,27 @@
 package com.baizhi.bio;
 
+import com.sun.xml.internal.ws.policy.privateutil.PolicyUtils;
+
 import java.io.*;
 import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.ToIntFunction;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Bootstrap {
-    public static void main1(String[] args) throws IOException {
+    public static void main2(String[] args) throws IOException {
 //        1.	创建Socket s=new Socket();
         Socket s=new Socket();
 //        2.	连接服务器s.connect(new InetSocketAddress(ip,9999));
-        s.connect(new InetSocketAddress("localhost",9999));
+        s.connect(new InetSocketAddress("10.5.1.221",12345));
 //        3.	使用流操作请求和响应 套路IO
         //①发请求
         OutputStream res = s.getOutputStream();
         PrintWriter pw=new PrintWriter(res);
-        pw.println("你好，服务器我是客户端2！");
+        pw.println("AT+STACH0=1,3\n");
         pw.flush();
         s.shutdownOutput();//告知服务请求内容发送结束
 
@@ -53,9 +59,9 @@ public class Bootstrap {
         System.out.println(stringBuilder.toString());
     }
 
-    public static void main(String[] args) {
+    public static void main19(String[] args) {
         List<Integer> integers = Arrays.asList(1, 1, 2, 2, 4, 1, 4, 5, 5, 2,2,2);
-        Map<String, List<Integer>> map = new HashMap<String,List<Integer>>();
+        List<List<Integer>> li = new ArrayList<>();
         int mark=integers.get(0);
         List<Integer> list = new ArrayList<>();
         for(Integer in:integers){
@@ -63,18 +69,60 @@ public class Bootstrap {
                 list.add(in);
             }else{
                 mark=in;
-                String s = UUID.randomUUID().toString().replaceAll("-", "");
-                map.put(s,list);
+                li.add(list);
                 list = new ArrayList<>();
                 list.add(in);
             }
         }
-        String s1 = UUID.randomUUID().toString().replaceAll("-", "");
-        map.put(s1,list);
-        map.forEach((s, integers1) -> {
-            System.out.print(s);
-            System.out.print(integers1.toString());
-            System.out.println("-------------------->");
+        li.add(list);
+        for (List<Integer> lis:li) {
+            System.out.println("------------------->");
+            for(Integer st:lis){
+                System.out.println(st);
+            }
+        }
+    }
+
+    public static void main(String[] args) {
+        float a=0.123123f;
+        double a1 = a;
+        System.out.println(a1);
+    }
+
+    public static void main7(String[] args) {
+
+        List<Integer> collect = Stream.of(1,2,4,1,5,6,3).collect(Collectors.toList());
+        collect.sort(Comparator.comparing(va->va));
+        for (Integer in:collect){
+            System.out.println(in);
+        }
+
+
+        Collections.sort(collect, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer o1, Integer o2) {
+                return o1-o2;
+            }
         });
+
+    }
+
+    public static void main12(String[] args) throws IOException {
+        Socket socket = new Socket();
+        socket.connect(new InetSocketAddress("localhost",9999));
+        OutputStream outputStream = socket.getOutputStream();
+        PrintWriter printWriter = new PrintWriter(outputStream);
+        printWriter.println("这是测试的");
+        printWriter.flush();
+        InputStream inputStream = socket.getInputStream();
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
+        BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+        StringBuilder stringBuilder = new StringBuilder();
+        String line= null;
+        while((line=bufferedReader.readLine())!=null){
+            stringBuilder.append(line);
+        }
+        bufferedReader.close();
+        System.out.println(stringBuilder.toString());
     }
 }

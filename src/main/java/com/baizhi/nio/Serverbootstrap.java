@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class Serverbootstrap {
-    public static void main(String[] args) throws IOException {
+    public static void main1(String[] args) throws IOException {
         server01();
     }
 
@@ -45,5 +45,45 @@ public class Serverbootstrap {
         s.socket().shutdownOutput();//告知客户端服务器写完
 //        5.	关闭socket资源
         s.close();
+    }
+
+    public static void main9(String[] args) throws IOException {
+        ServerSocketChannel open = ServerSocketChannel.open();
+        open.socket().bind(new InetSocketAddress(9999));
+        SocketChannel accept = open.accept();
+        ByteBuffer allocate = ByteBuffer.allocate(1024);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        while (true){
+            allocate.clear();
+            int read = accept.read(allocate);
+            if(read==-1) {
+                break;
+            }
+            outputStream.write(allocate.array(),0,read);
+        }
+        System.out.println(new String(outputStream.toByteArray()));
+
+        accept.write(ByteBuffer.wrap("".getBytes()));
+        accept.socket().shutdownOutput();
+    }
+
+    public static void main(String[] args) throws IOException {
+        ServerSocketChannel open = ServerSocketChannel.open();
+        open.socket().bind(new InetSocketAddress(9999));
+        SocketChannel accept = open.accept();
+        ByteBuffer allocate = ByteBuffer.allocate(1024);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        while (true){
+            allocate.clear();
+            int read = accept.read(allocate);
+            if(read==-1) {
+                break;
+            }
+            outputStream.write(allocate.array(),0,read);
+        }
+        System.out.println(new String(outputStream.toByteArray()));
+
+        accept.write(ByteBuffer.wrap(("niha").getBytes()));
+        accept.socket().shutdownOutput();
     }
 }

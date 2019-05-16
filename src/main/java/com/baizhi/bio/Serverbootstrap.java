@@ -137,4 +137,13 @@ public class Serverbootstrap {
         printWriter.flush();
         accept.close();
     }
+
+    public static void main11(String[] args) throws IOException {
+        ServerSocket serverSocket = new ServerSocket();
+        serverSocket.bind(new InetSocketAddress(9999));
+        Socket accept = serverSocket.accept();
+        InputStream inputStream = accept.getInputStream();
+        InputStreamReader inputStreamReader = new InputStreamReader(inputStream, "utf-8");
+        OutputStream outputStream = accept.getOutputStream();
+    }
 }
